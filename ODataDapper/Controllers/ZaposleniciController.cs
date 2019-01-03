@@ -109,13 +109,12 @@ namespace ODataDapper.Controllers
             return StatusCode(HttpStatusCode.NotImplemented);
         }
 
-        // DELETE: odata/Zaposleniks(5)
+        // DELETE: odata/Zaposlenici(5)
         public IHttpActionResult Delete([FromODataUri] int key)
         {
-            // TODO: Add delete logic here.
+            zaposlenikRepository.Delete(key);
 
-            // return StatusCode(HttpStatusCode.NoContent);
-            return StatusCode(HttpStatusCode.NotImplemented);
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }

@@ -109,13 +109,12 @@ namespace ODataDapper.Controllers
             return StatusCode(HttpStatusCode.NotImplemented);
         }
 
-        // DELETE: odata/Stavkas(5)
+        // DELETE: odata/Stavke(5)
         public IHttpActionResult Delete([FromODataUri] int key)
         {
-            // TODO: Add delete logic here.
+            stavkaRepository.Delete(key);
 
-            // return StatusCode(HttpStatusCode.NoContent);
-            return StatusCode(HttpStatusCode.NotImplemented);
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }

@@ -55,5 +55,20 @@ namespace ODataDapper.Repositories
             if (numberOfRowsAffected == 0)
                 throw new Exception("Entity in the database not updated");
         }
+
+
+        /// <summary>
+        /// Deletes the specified item.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <exception cref="Exception">Entity in the database not deleted</exception>
+        public void Delete(int id)
+        {
+            //Gets the number of rows affected by the database command
+            var numberOfRowsAffected = Execute("DELETE FROM Zaposlenik WHERE Id = @Id", new { id });
+
+            if (numberOfRowsAffected == 0)
+                throw new Exception("Entity in the database not deleted");
+        }
     }
 }
