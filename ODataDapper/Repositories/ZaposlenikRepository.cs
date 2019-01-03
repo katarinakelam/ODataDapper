@@ -32,5 +32,28 @@ namespace ODataDapper.Repositories
         {
             return Query<Zaposlenik>("SELECT * FROM Zaposlenik ORDER BY Prezime");
         }
+
+        /// <summary>
+        /// Updates the zaposlenik.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="zaposlenik">The zaposlenik.</param>
+        /// <returns>
+        /// Returns updated zaposlenik
+        /// </returns>
+        public void Update(int id, Zaposlenik zaposlenik)
+        {
+            var numberOfRowsAffected = Execute("UPDATE Zaposlenik SET Ime = @Ime, Prezime = @Prezime, DatumRodjenja = @DatumRodjenja, Dopustenje = @Dopustenje WHERE Id = @Id;", new
+            {
+                Ime = zaposlenik.Ime,
+                Prezime = zaposlenik.Prezime,
+                DatumRodjenja = zaposlenik.DatumRodjenja,
+                Dopustenje = zaposlenik.Dopustenje,
+                Id = id
+            });
+
+            if (numberOfRowsAffected == 0)
+                throw new Exception("Entity in the database not updated");
+        }
     }
 }

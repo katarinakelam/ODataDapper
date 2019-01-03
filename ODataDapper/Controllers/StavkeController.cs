@@ -52,7 +52,7 @@ namespace ODataDapper.Controllers
             return Ok(stavkaRepository.GetById(key));
         }
 
-        // PUT: odata/Stavkas(5)
+        // PUT: odata/Stavke(5)
         public IHttpActionResult Put([FromODataUri] int key, Delta<Stavka> delta)
         {
             Validate(delta.GetEntity());
@@ -62,17 +62,19 @@ namespace ODataDapper.Controllers
                 return BadRequest(ModelState);
             }
 
-            // TODO: Get the entity here.
+            // Get the existing stavka from the database
+            var stavkaToUpdate = stavkaRepository.GetById(key);
 
-            // delta.Put(stavka);
+            //Overwrite existing data with the new one
+            delta.Put(stavkaToUpdate);
 
-            // TODO: Save the patched entity.
+            //Update the entity with new data
+            stavkaRepository.Update(key, stavkaToUpdate);
 
-            // return Updated(stavka);
-            return StatusCode(HttpStatusCode.NotImplemented);
+            return Updated(stavkaToUpdate);
         }
 
-        // POST: odata/Stavkas
+        // POST: odata/Stavke
         public IHttpActionResult Post(Stavka stavka)
         {
             if (!ModelState.IsValid)

@@ -32,5 +32,27 @@ namespace ODataDapper.Repositories
         {
             return Query<Stavka>("SELECT * FROM Stavka ORDER BY Naziv");
         }
+
+        /// <summary>
+        /// Updates the stavka.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="stavka">The stavka.</param>
+        /// <returns>
+        /// Returns updated stavka
+        /// </returns>
+        public void Update(int id, Stavka stavka)
+        {
+            var numberOfRowsAffected = Execute("UPDATE Stavka SET Naziv = @Naziv, Opis = @Opis, Cijena = @Cijena WHERE Id = @Id;", new
+            {
+                Naziv = stavka.Naziv,
+                Opis = stavka.Opis,
+                Cijena = stavka.Cijena,
+                Id = id
+            });
+
+            if (numberOfRowsAffected == 0)
+                throw new Exception("Entity in the database not updated");
+        }
     }
 }
