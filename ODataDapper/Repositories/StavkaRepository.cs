@@ -28,7 +28,7 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns all stavke in the database.
         /// </returns>
-        public List<Stavka> GetAll()
+        public IEnumerable<Stavka> GetAll()
         {
             return Query<Stavka>("SELECT * FROM Stavka ORDER BY Naziv");
         }

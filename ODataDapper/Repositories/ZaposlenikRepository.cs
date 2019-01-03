@@ -28,7 +28,7 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns all zaposlenici in the database.
         /// </returns>
-        public List<Zaposlenik> GetAll()
+        public IEnumerable<Zaposlenik> GetAll()
         {
             return Query<Zaposlenik>("SELECT * FROM Zaposlenik ORDER BY Prezime");
         }
