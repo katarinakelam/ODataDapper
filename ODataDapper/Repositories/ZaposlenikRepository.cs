@@ -70,5 +70,31 @@ namespace ODataDapper.Repositories
             if (numberOfRowsAffected == 0)
                 throw new Exception("Entity in the database not deleted");
         }
+
+        /// <summary>
+        /// Creates the specified zaposlenik.
+        /// </summary>
+        /// <param name="stavka">The zaposlenik.</param>
+        /// <returns>
+        /// Returns the created zaposlenik.
+        /// </returns>
+        public Zaposlenik Create(Zaposlenik zaposlenik)
+        {
+            //Gets the number of rows affected by the database command
+            var numberOfRowsAffected = Execute("INSERT INTO Zaposlenik (Ime, Prezime, DatumRodjenja, Dopustenje) VALUES (@Ime, @Prezime, @DatumRodjenja, @Dopustenje )", new
+            {
+                Ime = zaposlenik.Ime,
+                Prezime = zaposlenik.Prezime,
+                DatumRodjenja = zaposlenik.DatumRodjenja,
+                Dopustenje = zaposlenik.Dopustenje
+            });
+
+            if (numberOfRowsAffected == 0)
+                throw new Exception("Entity in the database not created");
+
+            //Get last added item to the database
+            var zaposlenikFromDb = QueryFirstOrDefault<Zaposlenik>("SELECT * from Zaposlenik ORDER BY Id DESC LIMIT 1");
+            return zaposlenikFromDb;
+        }
     }
 }

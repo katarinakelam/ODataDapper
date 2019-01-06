@@ -54,7 +54,7 @@ namespace ODataDapper.Controllers
             return Ok(racunRepository.GetById(key));
         }
 
-        // PUT: odata/Racuns(5)
+        // PUT: odata/Racuni(5)
         public IHttpActionResult Put([FromODataUri] int key, Delta<Racun> delta)
         {
             Validate(delta.GetEntity());
@@ -64,14 +64,16 @@ namespace ODataDapper.Controllers
                 return BadRequest(ModelState);
             }
 
-            // TODO: Get the entity here.
+            // Get the existing racun from the database
+            var racunToUpdate = racunRepository.GetById(key);
 
-            // delta.Put(racun);
+            //Overwrite existing data with the new one
+            delta.Put(racunToUpdate);
 
-            // TODO: Save the patched entity.
+            //Update the entity with new data
+            racunRepository.Update(key, racunToUpdate);
 
-            // return Updated(racun);
-            return StatusCode(HttpStatusCode.NotImplemented);
+            return Updated(racunToUpdate);
         }
 
         // POST: odata/Racuns
@@ -88,34 +90,11 @@ namespace ODataDapper.Controllers
             return StatusCode(HttpStatusCode.NotImplemented);
         }
 
-        // PATCH: odata/Racuns(5)
-        [AcceptVerbs("PATCH", "MERGE")]
-        public IHttpActionResult Patch([FromODataUri] int key, Delta<Racun> delta)
-        {
-            Validate(delta.GetEntity());
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // TODO: Get the entity here.
-
-            // delta.Patch(racun);
-
-            // TODO: Save the patched entity.
-
-            // return Updated(racun);
-            return StatusCode(HttpStatusCode.NotImplemented);
-        }
-
-        // DELETE: odata/Racuns(5)
+        // DELETE: odata/Racuni(5)
         public IHttpActionResult Delete([FromODataUri] int key)
         {
-            // TODO: Add delete logic here.
-
-            // return StatusCode(HttpStatusCode.NoContent);
-            return StatusCode(HttpStatusCode.NotImplemented);
+            racunRepository.Delete(key);
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }

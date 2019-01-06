@@ -67,5 +67,30 @@ namespace ODataDapper.Repositories
             if (numberOfRowsAffected == 0)
                 throw new Exception("Entity in the database not deleted");
         }
+
+        /// <summary>
+        /// Creates the specified stavka.
+        /// </summary>
+        /// <param name="stavka">The stavka.</param>
+        /// <returns>
+        /// Returns the created stavka.
+        /// </returns>
+        public Stavka Create(Stavka stavka)
+        {
+            //Gets the number of rows affected by the database command
+            var numberOfRowsAffected = Execute("INSERT INTO Stavka (Naziv, Opis, Cijena) VALUES (@Naziv, @Opis, @Cijena )", new
+            {
+                Naziv = stavka.Naziv,
+                Opis = stavka.Opis,
+                Cijena = stavka.Cijena
+            });
+
+            if (numberOfRowsAffected == 0)
+                throw new Exception("Entity in the database not created");
+
+            //Get last added item to the database
+            var stavkaFromDb = QueryFirstOrDefault<Stavka>("SELECT * from Stavka ORDER BY Id DESC LIMIT 1");
+            return stavkaFromDb;
+        }
     }
 }

@@ -74,7 +74,7 @@ namespace ODataDapper.Controllers
             return Updated(zaposlenikToUpdate);
         }
 
-        // POST: odata/Zaposleniks
+        // POST: odata/Zaposlenici
         public IHttpActionResult Post(Zaposlenik zaposlenik)
         {
             if (!ModelState.IsValid)
@@ -82,31 +82,9 @@ namespace ODataDapper.Controllers
                 return BadRequest(ModelState);
             }
 
-            // TODO: Add create logic here.
-
-            // return Created(zaposlenik);
-            return StatusCode(HttpStatusCode.NotImplemented);
-        }
-
-        // PATCH: odata/Zaposleniks(5)
-        [AcceptVerbs("PATCH", "MERGE")]
-        public IHttpActionResult Patch([FromODataUri] int key, Delta<Zaposlenik> delta)
-        {
-            Validate(delta.GetEntity());
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // TODO: Get the entity here.
-
-            // delta.Patch(zaposlenik);
-
-            // TODO: Save the patched entity.
-
-            // return Updated(zaposlenik);
-            return StatusCode(HttpStatusCode.NotImplemented);
+            //Insert the new zaposlenik into the database
+            var createdZaposlenik = zaposlenikRepository.Create(zaposlenik);
+            return Created(createdZaposlenik);
         }
 
         // DELETE: odata/Zaposlenici(5)

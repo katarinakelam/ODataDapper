@@ -69,5 +69,41 @@ namespace ODataDapper.Repositories
 
             return newRacuni;
         }
+
+        /// <summary>
+        /// Updates the racun.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="stavka">The racun.</param>
+        /// <exception cref="Exception">Entity in the database not updated</exception>
+        public void Update(int id, Racun racun)
+        {
+            //Gets the number of rows affected by the database command
+            var numberOfRowsAffected = Execute("UPDATE Racun SET DatumIzdavanja = @DatumIzdavanja, JIR = @JIR, UkupanIznos = @UkupanIznos, Zaposlenik_Id = @Zaposlenik_Id WHERE Id = @Id;", new
+            {
+                DatumIzdavanja = racun.DatumIzdavanja,
+                JIR = racun.JIR,
+                UkupanIznos = racun.UkupanIznos,
+                Zaposlenik_Id = racun.Zaposlenik_Id,
+                Id = id
+            });
+
+            if (numberOfRowsAffected == 0)
+                throw new Exception("Entity in the database not updated");
+        }
+
+        /// <summary>
+        /// Deletes the specified item.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <exception cref="Exception">Entity in the database not deleted</exception>
+        public void Delete(int id)
+        {
+            //Gets the number of rows affected by the database command
+            var numberOfRowsAffected = Execute("DELETE FROM Racun WHERE Id = @Id", new { id });
+
+            if (numberOfRowsAffected == 0)
+                throw new Exception("Entity in the database not deleted");
+        }
     }
 }

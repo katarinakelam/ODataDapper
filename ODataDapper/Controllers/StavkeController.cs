@@ -82,31 +82,9 @@ namespace ODataDapper.Controllers
                 return BadRequest(ModelState);
             }
 
-            // TODO: Add create logic here.
-
-            // return Created(stavka);
-            return StatusCode(HttpStatusCode.NotImplemented);
-        }
-
-        // PATCH: odata/Stavkas(5)
-        [AcceptVerbs("PATCH", "MERGE")]
-        public IHttpActionResult Patch([FromODataUri] int key, Delta<Stavka> delta)
-        {
-            Validate(delta.GetEntity());
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // TODO: Get the entity here.
-
-            // delta.Patch(stavka);
-
-            // TODO: Save the patched entity.
-
-            // return Updated(stavka);
-            return StatusCode(HttpStatusCode.NotImplemented);
+            //Insert the stavka to the database
+            var createdStavka = stavkaRepository.Create(stavka);
+            return Created(createdStavka);
         }
 
         // DELETE: odata/Stavke(5)
