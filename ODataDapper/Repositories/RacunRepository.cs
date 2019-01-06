@@ -13,7 +13,7 @@ namespace ODataDapper.Repositories
     public class RacunRepository : BaseRepository
     {
         /// <summary>
-        /// Gets the stavka by identifier.
+        /// Gets the racun by identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Returns matched racun.</returns>
@@ -42,12 +42,12 @@ namespace ODataDapper.Repositories
         public IEnumerable<Racun> GetAll()
         {
             //Get all racuni from the database
-            var racuni =  Query<Racun>("SELECT * FROM Racun");
+            var racuni = Query<Racun>("SELECT * FROM Racun");
 
             //Create an empty new list of Racuni
             var newRacuni = new List<Racun>();
-            
-            foreach(var racun in racuni)
+
+            foreach (var racun in racuni)
             {
                 //Create a new racun
                 var newRacun = new Racun();
@@ -74,7 +74,7 @@ namespace ODataDapper.Repositories
         /// Updates the racun.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <param name="stavka">The racun.</param>
+        /// <param name="racun">The racun.</param>
         /// <exception cref="Exception">Entity in the database not updated</exception>
         public void Update(int id, Racun racun)
         {
@@ -104,6 +104,32 @@ namespace ODataDapper.Repositories
 
             if (numberOfRowsAffected == 0)
                 throw new Exception("Entity in the database not deleted");
+        }
+
+        /// <summary>
+        /// Creates the specified racun.
+        /// </summary>
+        /// <param name="racun">The racun.</param>
+        /// <returns>
+        /// Returns the created racun.
+        /// </returns>
+        public Racun Create(Racun racun)
+        {
+            //Gets the number of rows affected by the database command
+            var numberOfRowsAffected = Execute("INSERT INTO Racun (JIR, UkupanIznos, Zaposlenik_Id, DatumIzdavanja) VALUES (@JIR, @UkupanIznos, @Zaposlenik_Id, @DatumIzdavanja)", new
+            {
+                JIR = racun.JIR,
+                UkupanIznos = racun.UkupanIznos,
+                Zaposlenik_Id = racun.Zaposlenik_Id,
+                DatumIzdavanja = racun.DatumIzdavanja
+            });
+
+            if (numberOfRowsAffected == 0)
+                throw new Exception("Entity in the database not created");
+
+            //Get last added item to the database
+            var racunFromDb = QueryFirstOrDefault<Racun>("SELECT * from Racun ORDER BY Id DESC LIMIT 1");
+            return racunFromDb;
         }
     }
 }

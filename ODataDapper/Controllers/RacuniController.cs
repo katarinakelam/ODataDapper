@@ -76,7 +76,7 @@ namespace ODataDapper.Controllers
             return Updated(racunToUpdate);
         }
 
-        // POST: odata/Racuns
+        // POST: odata/Racuni
         public IHttpActionResult Post(Racun racun)
         {
             if (!ModelState.IsValid)
@@ -84,10 +84,9 @@ namespace ODataDapper.Controllers
                 return BadRequest(ModelState);
             }
 
-            // TODO: Add create logic here.
-
-            // return Created(racun);
-            return StatusCode(HttpStatusCode.NotImplemented);
+            //Insert the new racun into the database
+            var createdRacun = racunRepository.Create(racun);
+            return Created(createdRacun);
         }
 
         // DELETE: odata/Racuni(5)

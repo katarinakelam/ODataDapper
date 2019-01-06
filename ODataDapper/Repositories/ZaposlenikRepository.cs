@@ -74,7 +74,7 @@ namespace ODataDapper.Repositories
         /// <summary>
         /// Creates the specified zaposlenik.
         /// </summary>
-        /// <param name="stavka">The zaposlenik.</param>
+        /// <param name="zaposlenik">The zaposlenik.</param>
         /// <returns>
         /// Returns the created zaposlenik.
         /// </returns>
