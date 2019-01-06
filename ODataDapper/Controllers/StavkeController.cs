@@ -21,6 +21,13 @@ namespace ODataDapper.Controllers
         private StavkaRepository stavkaRepository = new StavkaRepository();
 
         // GET: odata/Stavke
+        /// <summary>
+        /// Gets the stavke.
+        /// </summary>
+        /// <param name="queryOptions">The query options.</param>
+        /// <returns>
+        /// Returns all stavke from the database
+        /// </returns>
         public IHttpActionResult GetStavke(ODataQueryOptions<Stavka> queryOptions)
         {
             // validate the query.
@@ -37,6 +44,14 @@ namespace ODataDapper.Controllers
         }
 
         // GET: odata/Stavke(5)
+        /// <summary>
+        /// Gets the stavka.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="queryOptions">The query options.</param>
+        /// <returns>
+        /// Returns requested stavka
+        /// </returns>
         public IHttpActionResult GetStavka([FromODataUri] int key, ODataQueryOptions<Stavka> queryOptions)
         {
             // validate the query.
@@ -53,6 +68,14 @@ namespace ODataDapper.Controllers
         }
 
         // PUT: odata/Stavke(5)
+        /// <summary>
+        /// Puts the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="delta">The delta.</param>
+        /// <returns>
+        /// Returns updated stavka
+        /// </returns>
         public IHttpActionResult Put([FromODataUri] int key, Delta<Stavka> delta)
         {
             Validate(delta.GetEntity());
@@ -75,6 +98,13 @@ namespace ODataDapper.Controllers
         }
 
         // POST: odata/Stavke
+        /// <summary>
+        /// Posts the specified stavka.
+        /// </summary>
+        /// <param name="stavka">The stavka.</param>
+        /// <returns>
+        /// Returns created stavka
+        /// </returns>
         public IHttpActionResult Post(Stavka stavka)
         {
             if (!ModelState.IsValid)
@@ -88,6 +118,13 @@ namespace ODataDapper.Controllers
         }
 
         // DELETE: odata/Stavke(5)
+        /// <summary>
+        /// Deletes the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        /// Returns the no content status code
+        /// </returns>
         public IHttpActionResult Delete([FromODataUri] int key)
         {
             stavkaRepository.Delete(key);

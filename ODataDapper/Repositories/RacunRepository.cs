@@ -131,5 +131,82 @@ namespace ODataDapper.Repositories
             var racunFromDb = QueryFirstOrDefault<Racun>("SELECT * from Racun ORDER BY Id DESC LIMIT 1");
             return racunFromDb;
         }
+
+        /// <summary>
+        /// Adds the stavka to racun.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="stavka">The stavka.</param>
+        /// <returns>
+        /// Returns the updated racun.
+        /// </returns>
+        /// <exception cref="Exception">The given stavka already exists in the database, please check then add by id</exception>
+        public Racun AddStavkaToRacun(int id, Stavka stavka)
+        {
+            //Get basic racun info
+            var racun = QueryFirstOrDefault<Racun>("SELECT * FROM Racun WHERE Racun.Id = @Id ", new { id });
+
+            if (stavka == null)
+                throw new ArgumentNullException(nameof(stavka));
+
+            //Check whether the stavka already exists in the database
+            var stavkaFromDb = QueryFirstOrDefault<Stavka>("SELECT * FROM Stavka WHERE Naziv = @Naziv, Opis = @Opis, Cijena = @Cijena", new
+            {
+                Naziv = stavka.Naziv,
+                Opis = stavka.Opis,
+                Cijena = stavka.Cijena
+            });
+
+            if (stavkaFromDb != null)
+                throw new Exception("The given stavka already exists in the database, please check then add by id");
+
+            //Get stavka repository for easier operations
+            StavkaRepository stavkaRepository = new StavkaRepository();
+
+            //Save the new stavka to the database
+            var newStavka = stavkaRepository.Create(stavka);
+
+            //Add the connection between new stavka and the racun to the database
+            Execute("INSERT INTO Racun_Stavka (Racun_Id, Stavka_Id) VALUES (@Racun_Id, @Stavka_Id)", new
+            {
+                Racun_Id = id,
+                Stavka_Id = newStavka.Id
+            });
+
+            return racun;
+        }
+
+        /// <summary>
+        /// Adds the stavka to racun by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="stavkaId">The stavka identifier.</param>
+        /// <returns>
+        /// Returns the updated racun.
+        /// </returns>
+        /// <exception cref="Exception">The given stavka does not exist in the database, please create the stavka first</exception>
+        public Racun AddStavkaToRacunById(int id, int? stavkaId)
+        {
+            //Get basic racun info
+            var racun = QueryFirstOrDefault<Racun>("SELECT * FROM Racun WHERE Racun.Id = @Id ", new { id });
+
+            if (stavkaId == null)
+                throw new ArgumentNullException(nameof(stavkaId));
+
+            //Check whether the stavka exists in the database
+            var stavkaFromDb = QueryFirstOrDefault<Stavka>("SELECT * FROM Stavka WHERE Id = @Id", new { Id = stavkaId.Value });
+
+            if (stavkaFromDb == null)
+                throw new Exception("The given stavka does not exist in the database, please create the stavka first");
+
+            //Add the connection between new stavka and the racun to the database
+            Execute("INSERT INTO Racun_Stavka (Racun_Id, Stavka_Id) VALUES (@Racun_Id, @Stavka_Id)", new
+            {
+                Racun_Id = id,
+                Stavka_Id = stavkaId.Value
+            });
+
+            return racun;
+        }
     }
 }

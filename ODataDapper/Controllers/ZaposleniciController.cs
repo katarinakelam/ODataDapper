@@ -21,6 +21,13 @@ namespace ODataDapper.Controllers
         private ZaposlenikRepository zaposlenikRepository = new ZaposlenikRepository();
 
         // GET: odata/Zaposlenici
+        /// <summary>
+        /// Gets the zaposlenici.
+        /// </summary>
+        /// <param name="queryOptions">The query options.</param>
+        /// <returns>
+        /// Returns all zaposlenici from the database.
+        /// </returns>
         public IHttpActionResult GetZaposlenici(ODataQueryOptions<Zaposlenik> queryOptions)
         {
             // validate the query.
@@ -37,6 +44,14 @@ namespace ODataDapper.Controllers
         }
 
         // GET: odata/Zaposlenici(5)
+        /// <summary>
+        /// Gets the zaposlenik.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="queryOptions">The query options.</param>
+        /// <returns>
+        /// Returns the matching zaposlenik
+        /// </returns>
         public IHttpActionResult GetZaposlenik([FromODataUri] int key, ODataQueryOptions<Zaposlenik> queryOptions)
         {
             // validate the query.
@@ -53,6 +68,14 @@ namespace ODataDapper.Controllers
         }
 
         // PUT: odata/Zaposlenici(5)
+        /// <summary>
+        /// Puts the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="delta">The delta.</param>
+        /// <returns>
+        /// Returns the updated zaposlenik
+        /// </returns>
         public IHttpActionResult Put([FromODataUri] int key, Delta<Zaposlenik> delta)
         {
             Validate(delta.GetEntity());
@@ -75,6 +98,13 @@ namespace ODataDapper.Controllers
         }
 
         // POST: odata/Zaposlenici
+        /// <summary>
+        /// Posts the specified zaposlenik.
+        /// </summary>
+        /// <param name="zaposlenik">The zaposlenik.</param>
+        /// <returns>
+        /// Returns the created zaposlenik
+        /// </returns>
         public IHttpActionResult Post(Zaposlenik zaposlenik)
         {
             if (!ModelState.IsValid)
@@ -88,6 +118,13 @@ namespace ODataDapper.Controllers
         }
 
         // DELETE: odata/Zaposlenici(5)
+        /// <summary>
+        /// Deletes the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        /// Returns the no content status code
+        /// </returns>
         public IHttpActionResult Delete([FromODataUri] int key)
         {
             zaposlenikRepository.Delete(key);
