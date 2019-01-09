@@ -199,8 +199,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\SQLQueryBuilder.cs" />
     <Compile Include="Models\Racun.cs" />
     <Compile Include="Models\Stavka.cs" />
+    <Compile Include="Models\StavkaDTO.cs" />
     <Compile Include="Models\Zaposlenik.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />

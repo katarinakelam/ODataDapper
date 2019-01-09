@@ -22,7 +22,7 @@ namespace ODataDapper
             addStavkaByIdToRacunAction.Parameter<int>("Value");
 
             var addStavkaToRacunAction = builder.Entity<Racun>().Action("AddStavka");
-            addStavkaToRacunAction.Parameter<Stavka>("Value");
+            addStavkaToRacunAction.Parameter<StavkaDTO>("Value");
 
             //Configure action of removing stavka from racun on Delete: ~odata/Racuni(1)/DeleteStavka
             var deleteStavkaFromRacunAction = builder.Entity<Racun>().Action("DeleteStavka");

@@ -12,6 +12,7 @@ using System.Web.Http.OData.Routing;
 using ODataDapper.Models;
 using Microsoft.Data.OData;
 using ODataDapper.Repositories;
+using ODataDapper.Helpers;
 
 namespace ODataDapper.Controllers
 {
@@ -28,6 +29,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns all zaposlenici from the database.
         /// </returns>
+        [EnableQuery]
         public IHttpActionResult GetZaposlenici(ODataQueryOptions<Zaposlenik> queryOptions)
         {
             // validate the query.
@@ -40,7 +42,8 @@ namespace ODataDapper.Controllers
                 return BadRequest(ex.Message);
             }
 
-            return Ok(zaposlenikRepository.GetAll());
+            var sqlBuilder = new SQLQueryBuilder(queryOptions);
+            return Ok(zaposlenikRepository.GetAll(sqlBuilder.ToSql()));
         }
 
         // GET: odata/Zaposlenici(5)

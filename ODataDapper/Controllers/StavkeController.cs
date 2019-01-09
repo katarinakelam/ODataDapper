@@ -12,6 +12,7 @@ using System.Web.Http.OData.Routing;
 using ODataDapper.Models;
 using Microsoft.Data.OData;
 using ODataDapper.Repositories;
+using ODataDapper.Helpers;
 
 namespace ODataDapper.Controllers
 {
@@ -21,6 +22,7 @@ namespace ODataDapper.Controllers
         private StavkaRepository stavkaRepository = new StavkaRepository();
 
         // GET: odata/Stavke
+        // GET: odata/Stavke?$filter=Cijena+lt+6
         /// <summary>
         /// Gets the stavke.
         /// </summary>
@@ -28,6 +30,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns all stavke from the database
         /// </returns>
+        [EnableQuery]
         public IHttpActionResult GetStavke(ODataQueryOptions<Stavka> queryOptions)
         {
             // validate the query.
@@ -40,7 +43,8 @@ namespace ODataDapper.Controllers
                 return BadRequest(ex.Message);
             }
 
-            return Ok(stavkaRepository.GetAll());
+            var sqlBuilder = new SQLQueryBuilder(queryOptions);
+            return Ok(stavkaRepository.GetAll(sqlBuilder.ToSql()));
         }
 
         // GET: odata/Stavke(5)

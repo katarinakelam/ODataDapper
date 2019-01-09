@@ -12,6 +12,7 @@ using System.Web.Http.OData.Routing;
 using ODataDapper.Models;
 using Microsoft.Data.OData;
 using ODataDapper.Repositories;
+using ODataDapper.Helpers;
 
 namespace ODataDapper.Controllers
 {
@@ -21,6 +22,7 @@ namespace ODataDapper.Controllers
         private RacunRepository racunRepository = new RacunRepository();
 
         // GET: odata/Racuni
+        // GET: odata/Racuni?$filter=Zaposlenik_Id+eq+1
         /// <summary>
         /// Gets the racuni.
         /// </summary>
@@ -41,7 +43,9 @@ namespace ODataDapper.Controllers
                 return BadRequest(ex.Message);
             }
 
-            return Ok(racunRepository.GetAll());
+            var sqlBuilder = new SQLQueryBuilder(queryOptions);
+
+            return Ok(racunRepository.GetAll(sqlBuilder.ToSql()));
         }
 
         // GET: odata/Racuni(5)
@@ -66,6 +70,7 @@ namespace ODataDapper.Controllers
                 return BadRequest(ex.Message);
             }
 
+            var sqlBuilder = new SQLQueryBuilder(queryOptions);
             return Ok(racunRepository.GetById(key));
         }
 
@@ -145,7 +150,7 @@ namespace ODataDapper.Controllers
         public IHttpActionResult AddStavka([FromODataUri] int key, ODataActionParameters parameters)
         {
             //read parameter from ODataActionParameters 
-            var stavkaToAdd = parameters["Value"] as Stavka;
+            var stavkaToAdd = parameters["Value"] as StavkaDTO;
 
             //Updates the racun with the given new stavka
             var updatedRacun = racunRepository.AddStavkaToRacun(key, stavkaToAdd);

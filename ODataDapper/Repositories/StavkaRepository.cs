@@ -25,12 +25,13 @@ namespace ODataDapper.Repositories
         /// <summary>
         /// Gets all stavke.
         /// </summary>
+        /// <param name="filterSQL">The filter SQL.</param>
         /// <returns>
         /// Returns all stavke in the database.
         /// </returns>
-        public IEnumerable<Stavka> GetAll()
+        public IEnumerable<Stavka> GetAll(string filterSQL)
         {
-            return Query<Stavka>("SELECT * FROM Stavka ORDER BY Naziv");
+            return Query<Stavka>("SELECT * FROM Stavka" + filterSQL);
         }
 
         /// <summary>

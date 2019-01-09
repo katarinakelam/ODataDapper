@@ -25,12 +25,13 @@ namespace ODataDapper.Repositories
         /// <summary>
         /// Gets all zaposlenici.
         /// </summary>
+        /// <param name="filterSQL">The filter SQL.</param>
         /// <returns>
         /// Returns all zaposlenici in the database.
         /// </returns>
-        public IEnumerable<Zaposlenik> GetAll()
+        public IEnumerable<Zaposlenik> GetAll(string filterSQL)
         {
-            return Query<Zaposlenik>("SELECT * FROM Zaposlenik ORDER BY Prezime");
+            return Query<Zaposlenik>("SELECT * FROM Zaposlenik" + filterSQL);
         }
 
         /// <summary>

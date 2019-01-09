@@ -16,11 +16,17 @@ namespace ODataDapper.Repositories
         /// Gets the racun by identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns>Returns matched racun.</returns>
+        /// <returns>
+        /// Returns matched racun.
+        /// </returns>
         public Racun GetById(int id)
         {
             //Get basic racun info
             var racun = QueryFirstOrDefault<Racun>("SELECT * FROM Racun WHERE Racun.Id = @Id ", new { id });
+
+            if (racun == null)
+                return racun;
+
             racun.Stavke = new List<Stavka>();
 
             //Get all stavke from this racun
@@ -36,36 +42,38 @@ namespace ODataDapper.Repositories
         /// <summary>
         /// Gets all racuni.
         /// </summary>
+        /// <param name="filterSQL">The filter SQL.</param>
         /// <returns>
         /// Returns all racuni in the database.
         /// </returns>
-        public IEnumerable<Racun> GetAll()
+        public IEnumerable<Racun> GetAll(string filterSQL)
         {
             //Get all racuni from the database
-            var racuni = Query<Racun>("SELECT * FROM Racun");
+            var racuni = Query<Racun>("SELECT * FROM Racun" + filterSQL);
 
             //Create an empty new list of Racuni
             var newRacuni = new List<Racun>();
 
-            foreach (var racun in racuni)
-            {
-                //Create a new racun
-                var newRacun = new Racun();
+            if (racuni != null)
+                foreach (var racun in racuni)
+                {
+                    //Create a new racun
+                    var newRacun = new Racun();
 
-                //Copy data from existing racun to a new one
-                newRacun = racun;
-                newRacun.Stavke = new List<Stavka>();
-                newRacun.Zaposlenik = new Zaposlenik();
+                    //Copy data from existing racun to a new one
+                    newRacun = racun;
+                    newRacun.Stavke = new List<Stavka>();
+                    newRacun.Zaposlenik = new Zaposlenik();
 
-                //Get all stavke from this racun
-                newRacun.Stavke = Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { racun.Id });
+                    //Get all stavke from this racun
+                    newRacun.Stavke = Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { racun.Id });
 
-                //Get the matching zaposlenik from this racun
-                newRacun.Zaposlenik = QueryFirstOrDefault<Zaposlenik>("SELECT Zaposlenik.Id, Zaposlenik.Ime, Zaposlenik.Prezime, Zaposlenik.Adresa, Zaposlenik.DatumRodjenja, Zaposlenik.Dopustenje from Zaposlenik, Racun where Zaposlenik.Id = Racun.Zaposlenik_Id and Racun.Id = @Id", new { racun.Id });
+                    //Get the matching zaposlenik from this racun
+                    newRacun.Zaposlenik = QueryFirstOrDefault<Zaposlenik>("SELECT Zaposlenik.Id, Zaposlenik.Ime, Zaposlenik.Prezime, Zaposlenik.Adresa, Zaposlenik.DatumRodjenja, Zaposlenik.Dopustenje from Zaposlenik, Racun where Zaposlenik.Id = Racun.Zaposlenik_Id and Racun.Id = @Id", new { racun.Id });
 
-                //Add the expanded racun to list of racuni
-                newRacuni.Add(newRacun);
-            }
+                    //Add the expanded racun to list of racuni
+                    newRacuni.Add(newRacun);
+                }
 
             return newRacuni;
         }
@@ -141,7 +149,7 @@ namespace ODataDapper.Repositories
         /// Returns the updated racun.
         /// </returns>
         /// <exception cref="Exception">The given stavka already exists in the database, please check then add by id</exception>
-        public Racun AddStavkaToRacun(int id, Stavka stavka)
+        public Racun AddStavkaToRacun(int id, StavkaDTO stavka)
         {
             //Get basic racun info
             var racun = QueryFirstOrDefault<Racun>("SELECT * FROM Racun WHERE Racun.Id = @Id ", new { id });
@@ -163,8 +171,16 @@ namespace ODataDapper.Repositories
             //Get stavka repository for easier operations
             StavkaRepository stavkaRepository = new StavkaRepository();
 
+            //Create a stavka model out of stavka data transfer object
+            var stavkaToCreate = new Stavka()
+            {
+                Naziv = stavka.Naziv,
+                Opis = stavka.Opis,
+                Cijena = stavka.Cijena
+            };
+
             //Save the new stavka to the database
-            var newStavka = stavkaRepository.Create(stavka);
+            var newStavka = stavkaRepository.Create(stavkaToCreate);
 
             //Add the connection between new stavka and the racun to the database
             Execute("INSERT INTO Racun_Stavka (Racun_Id, Stavka_Id) VALUES (@Racun_Id, @Stavka_Id)", new
