@@ -78,9 +78,13 @@ namespace ODataDapper.Repositories
         /// </returns>
         public Stavka Create(Stavka stavka)
         {
+            var lastStavkaFromDb = QueryFirstOrDefault<Racun>("SELECT TOP 1 * FROM Stavka ORDER BY Id DESC ");
+            stavka.Id = lastStavkaFromDb.Id + 1;
+
             //Gets the number of rows affected by the database command
-            var numberOfRowsAffected = Execute("INSERT INTO Stavka (Naziv, Opis, Cijena) VALUES (@Naziv, @Opis, @Cijena )", new
+            var numberOfRowsAffected = Execute("INSERT INTO Stavka (Id, Naziv, Opis, Cijena) VALUES (@Id, @Naziv, @Opis, @Cijena )", new
             {
+                Id = stavka.Id,
                 Naziv = stavka.Naziv,
                 Opis = stavka.Opis,
                 Cijena = stavka.Cijena
@@ -90,7 +94,7 @@ namespace ODataDapper.Repositories
                 throw new Exception("Entity in the database not created");
 
             //Get last added item to the database
-            var stavkaFromDb = QueryFirstOrDefault<Stavka>("SELECT * from Stavka ORDER BY Id DESC LIMIT 1");
+            var stavkaFromDb = QueryFirstOrDefault<Stavka>("SELECT TOP 1 * FROM Stavka ORDER BY Id DESC ");
             return stavkaFromDb;
         }
     }

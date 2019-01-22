@@ -81,9 +81,13 @@ namespace ODataDapper.Repositories
         /// </returns>
         public Zaposlenik Create(Zaposlenik zaposlenik)
         {
+            var lastZaposlenikFromDb = QueryFirstOrDefault<Racun>("SELECT TOP 1 * FROM Zaposlenik ORDER BY Id DESC ");
+            zaposlenik.Id = lastZaposlenikFromDb.Id + 1;
+
             //Gets the number of rows affected by the database command
-            var numberOfRowsAffected = Execute("INSERT INTO Zaposlenik (Ime, Prezime, DatumRodjenja, Dopustenje) VALUES (@Ime, @Prezime, @DatumRodjenja, @Dopustenje )", new
+            var numberOfRowsAffected = Execute("INSERT INTO Zaposlenik (Id, Ime, Prezime, DatumRodjenja, Dopustenje) VALUES (@Id, @Ime, @Prezime, @DatumRodjenja, @Dopustenje )", new
             {
+                Id = zaposlenik.Id,
                 Ime = zaposlenik.Ime,
                 Prezime = zaposlenik.Prezime,
                 DatumRodjenja = zaposlenik.DatumRodjenja,
@@ -94,7 +98,7 @@ namespace ODataDapper.Repositories
                 throw new Exception("Entity in the database not created");
 
             //Get last added item to the database
-            var zaposlenikFromDb = QueryFirstOrDefault<Zaposlenik>("SELECT * from Zaposlenik ORDER BY Id DESC LIMIT 1");
+            var zaposlenikFromDb = QueryFirstOrDefault<Zaposlenik>("SELECT TOP 1 * FROM Zaposlenik ORDER BY Id DESC");
             return zaposlenikFromDb;
         }
     }

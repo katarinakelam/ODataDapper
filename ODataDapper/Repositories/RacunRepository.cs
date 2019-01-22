@@ -123,9 +123,13 @@ namespace ODataDapper.Repositories
         /// </returns>
         public Racun Create(Racun racun)
         {
+            var lastRacunFromDb = QueryFirstOrDefault<Racun>("SELECT TOP 1 * FROM Racun ORDER BY Id DESC ");
+            racun.Id = lastRacunFromDb.Id + 1;
+
             //Gets the number of rows affected by the database command
-            var numberOfRowsAffected = Execute("INSERT INTO Racun (JIR, UkupanIznos, Zaposlenik_Id, DatumIzdavanja) VALUES (@JIR, @UkupanIznos, @Zaposlenik_Id, @DatumIzdavanja)", new
+            var numberOfRowsAffected = Execute("INSERT INTO Racun (Id, JIR, UkupanIznos, Zaposlenik_Id, DatumIzdavanja) VALUES (@Id, @JIR, @UkupanIznos, @Zaposlenik_Id, @DatumIzdavanja)", new
             {
+                Id = racun.Id,
                 JIR = racun.JIR,
                 UkupanIznos = racun.UkupanIznos,
                 Zaposlenik_Id = racun.Zaposlenik_Id,
@@ -136,7 +140,7 @@ namespace ODataDapper.Repositories
                 throw new Exception("Entity in the database not created");
 
             //Get last added item to the database
-            var racunFromDb = QueryFirstOrDefault<Racun>("SELECT * from Racun ORDER BY Id DESC LIMIT 1");
+            var racunFromDb = QueryFirstOrDefault<Racun>("SELECT TOP 1 * FROM Racun ORDER BY Id DESC ");
             return racunFromDb;
         }
 
@@ -158,7 +162,7 @@ namespace ODataDapper.Repositories
                 throw new ArgumentNullException(nameof(stavka));
 
             //Check whether the stavka already exists in the database
-            var stavkaFromDb = QueryFirstOrDefault<Stavka>("SELECT * FROM Stavka WHERE Naziv = @Naziv, Opis = @Opis, Cijena = @Cijena", new
+            var stavkaFromDb = QueryFirstOrDefault<Stavka>("SELECT * FROM Stavka WHERE Naziv = @Naziv AND Opis = @Opis AND Cijena = @Cijena", new
             {
                 Naziv = stavka.Naziv,
                 Opis = stavka.Opis,
