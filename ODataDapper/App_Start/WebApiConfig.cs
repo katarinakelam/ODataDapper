@@ -24,10 +24,6 @@ namespace ODataDapper
             var addStavkaToRacunAction = builder.Entity<Racun>().Action("AddStavka");
             addStavkaToRacunAction.Parameter<StavkaDTO>("Value");
 
-            //Configure action of removing stavka from racun on Delete: ~odata/Racuni(1)/DeleteStavka
-            var deleteStavkaFromRacunAction = builder.Entity<Racun>().Action("DeleteStavka");
-            //deleteStavkaFromRacunAction.Parameter<int>("Value");
-
             config.Routes.MapODataServiceRoute(
                 routeName: "ODataRoute",
                 routePrefix: null,
