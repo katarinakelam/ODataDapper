@@ -17,10 +17,11 @@ namespace ODataDapper
             builder.EntitySet<Zaposlenik>("Zaposlenici");
             builder.EntitySet<Racun>("Racuni");
 
-            //Configure action of adding stavka to racun on Post: ~odata/Racuni(1)/AddStavka
+            //Configure action of adding stavka to racun on Post: ~odata/Racuni(1)/AddStavkaById
             var addStavkaByIdToRacunAction = builder.Entity<Racun>().Action("AddStavkaById");
             addStavkaByIdToRacunAction.Parameter<int>("Value");
 
+            //Configure action of adding stavka to racun on Post: ~odata/Racuni(1)/AddStavka
             var addStavkaToRacunAction = builder.Entity<Racun>().Action("AddStavka");
             addStavkaToRacunAction.Parameter<StavkaDTO>("Value");
 

@@ -23,6 +23,7 @@ namespace ODataDapper.Controllers
 
         // GET: odata/Racuni
         // GET: odata/Racuni?$filter=Zaposlenik_Id+eq+1
+        // GET: odata/Racuni?expand=Stavke
         /// <summary>
         /// Gets the racuni.
         /// </summary>
