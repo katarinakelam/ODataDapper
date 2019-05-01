@@ -17,29 +17,33 @@ namespace ODataDapper.ConsoleApp
 
         static void Main(string[] args)
         {
+            MainAsync(args).GetAwaiter().GetResult();
+        }
+
+        static async Task MainAsync(string[] args)
+        {
             ODataClientSettings settings = new ODataClientSettings(url);
             settings.IgnoreResourceNotFoundException = true;
+            settings.PreferredUpdateMethod = ODataUpdateMethod.Put;
             settings.OnTrace = (x, y) => Console.WriteLine(string.Format(x, y));
 
             var client = new ODataClient(settings);
 
-            Task.Run(async () =>
-            {
-                //Test client on Racuni collection
-                await FetchRacuni(client);
+            //Test client on Racuni collection
+            await FetchRacuni(client);
 
-                //Test client on Stavke collection
-                await FetchStavke(client);
-            });
+            //Test client on Stavke collection
+            await FetchStavke(client);
         }
 
         private static async Task FetchRacuni(ODataClient client)
         {
-            racunCount = await client.For<Racun>().Count().FindScalarAsync<int>();
+            racunCount = client.For<Racun>("Racuni").FindEntriesAsync().Result.Count();
             Console.WriteLine("Broj svih računa: " + racunCount);
 
+            Console.WriteLine("Zadnje uneseni racun: ");
             //Print out racun with given identifier
-            await PrintRacun(client, 3);
+            await PrintRacun(client, racunCount);
 
             //Create a new racun
             var newRacun = new Racun
@@ -48,11 +52,11 @@ namespace ODataDapper.ConsoleApp
                 DatumIzdavanja = DateTime.Now,
                 JIR = "Zj46854dfs4s6",
                 UkupanIznos = 153,
-                Zaposlenik_Id = 3
+                Zaposlenik_Id = 2
             };
 
             //Insert racun using client
-            var racun = await client.For<Racun>()
+            var racun = await client.For<Racun>("Racuni")
                 .Set(newRacun).InsertEntryAsync();
 
             //Check if new racun was properly saved to the database
@@ -60,12 +64,11 @@ namespace ODataDapper.ConsoleApp
             await PrintRacun(client, racun.Id);
 
             //Update created racun
-            racun.JIR += "_";
-
-            racun = await client.For<Racun>()
+            racun.JIR = "dsfdgdsf";
+            await client.For<Racun>("Racuni")
                 .Key(racun.Id)
-                .Set(new { JIR = "Prazni naziv" })
-                .UpdateEntryAsync();
+                .Set(racun)
+                .UpdateEntryAsync(false);
 
             Console.WriteLine("Ažuriran račun");
 
@@ -73,7 +76,7 @@ namespace ODataDapper.ConsoleApp
             await PrintRacun(client, racun.Id);
 
             //Delete created racun
-            await client.For<Racun>()
+            await client.For<Racun>("Racuni")
                 .Key(racun.Id)
                 .DeleteEntryAsync();
 
@@ -82,7 +85,7 @@ namespace ODataDapper.ConsoleApp
 
         private static async Task PrintRacun(ODataClient client, int key)
         {
-            var racun = await client.For<Racun>()
+            var racun = await client.For<Racun>("Racuni")
                 .Key(key)
                 .FindEntryAsync();
             Console.WriteLine($"IdRacuna: {racun.Id}, datum izdavanja: {racun.DatumIzdavanja}, JIR: {racun.JIR}, iznos: {racun.UkupanIznos}");
@@ -91,18 +94,19 @@ namespace ODataDapper.ConsoleApp
         private static async Task FetchStavke(ODataClient client)
         {
             //Get count of collection
-            stavkeCount = await client.For<Stavka>().Count().FindScalarAsync<int>();
+            stavkeCount = client.For<Stavka>("Stavke").FindEntriesAsync().Result.Count();
             Console.WriteLine("Broj svih stavki: " + stavkeCount);
 
             //Get all stavke with price larger than 6
-            var stavke = await client.For<Stavka>()
+            var stavke = await client.For<Stavka>("Stavke")
                 .Filter(s => s.Cijena > 6)
-                .OrderByDescending(s => s.Id)
+                .OrderByDescending(s => s.Cijena)
                 .FindEntriesAsync();
             foreach (var stavka in stavke)
             {
                 Console.WriteLine($"Id: {stavka.Id}, cijena: {stavka.Cijena}, naziv: {stavka.Naziv}");
             }
+            Console.ReadKey();
         }
     }
 }
