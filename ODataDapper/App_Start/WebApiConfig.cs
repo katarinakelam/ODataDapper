@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.OData.Builder;
 using System.Web.Http.OData.Extensions;
+using ODataDapper.Helpers;
 using ODataDapper.Models;
 
 namespace ODataDapper
@@ -25,6 +26,7 @@ namespace ODataDapper
             var addStavkaToRacunAction = builder.Entity<Racun>().Action("AddStavka");
             addStavkaToRacunAction.Parameter<StavkaDTO>("Value");
 
+            config.MessageHandlers.Add(new LoggingRequestHandler());
             config.Routes.MapODataServiceRoute(
                 routeName: "ODataRoute",
                 routePrefix: null,
