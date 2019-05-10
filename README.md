@@ -13,5 +13,8 @@ Example:
 - implements basic actions such as Query, QueryFirstOrDefault, Execute(for actions that Create, Update or Delete anything from the database)
 
 ## SQLQueryBuilder
-- contains the logic that is responsible for translating OData query options to raw SQL - but only for filter options
+- contains the logic that is responsible for translating OData query options to raw SQL - so far, options for FILTERING and ORDERING have been implemented
 (The filter options with OData protocol are used only with collections)
+
+## Console App
+- represents an imitation of a OData client which, using common OData functions, calls the service and executes queries on the database.
