@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
@@ -33,7 +34,7 @@ namespace ODataDapper.Controllers
         /// Returns all racuni from the database.
         /// </returns>
         [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
-        public IHttpActionResult GetRacuni(ODataQueryOptions<Racun> queryOptions)
+        public async Task<IHttpActionResult> GetRacuni(ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
             try
@@ -48,9 +49,9 @@ namespace ODataDapper.Controllers
             var sqlBuilder = new SQLQueryBuilder(queryOptions);
 
             // make $count works     
-            Request.ODataProperties().TotalCount = racunRepository.GetCount(sqlBuilder.ToCountSql());
+            Request.ODataProperties().TotalCount = await racunRepository.GetCount(sqlBuilder.ToCountSql());
 
-            return Ok(racunRepository.GetAll(sqlBuilder.ToSql()));
+            return Ok(await racunRepository.GetAll(sqlBuilder.ToSql()));
         }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns counted items
         /// </returns>
-        public IHttpActionResult GetCount(ODataQueryOptions<Racun> queryOptions)
+        public async Task<IHttpActionResult> GetCount(ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
             try
@@ -72,8 +73,8 @@ namespace ODataDapper.Controllers
                 return BadRequest(ex.Message);
             }
 
-            var sqlBuilder = new SQLQueryBuilder(queryOptions);    
-            return Ok(racunRepository.GetCount(sqlBuilder.ToCountSql()));
+            var sqlBuilder = new SQLQueryBuilder(queryOptions);
+            return Ok(await racunRepository.GetCount(sqlBuilder.ToCountSql()));
         }
 
         // GET: odata/Racuni(5)
@@ -111,7 +112,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         ///  Returns the updated racun.
         /// </returns>
-        public IHttpActionResult Put([FromODataUri] int key, Delta<Racun> delta)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Racun> delta)
         {
             Validate(delta.GetEntity());
 
@@ -121,7 +122,7 @@ namespace ODataDapper.Controllers
             }
 
             // Get the existing racun from the database
-            var racunToUpdate = racunRepository.GetById(key);
+            var racunToUpdate = await racunRepository.GetById(key);
 
             //Overwrite existing data with the new one
             delta.Put(racunToUpdate);

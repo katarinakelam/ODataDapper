@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
@@ -32,7 +33,7 @@ namespace ODataDapper.Controllers
         /// Returns all stavke from the database
         /// </returns>
         [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
-        public IHttpActionResult GetStavke(ODataQueryOptions<Stavka> queryOptions)
+        public async Task<IHttpActionResult> GetStavke(ODataQueryOptions<Stavka> queryOptions)
         {
             // validate the query.
             try
@@ -47,9 +48,9 @@ namespace ODataDapper.Controllers
             var sqlBuilder = new SQLQueryBuilder(queryOptions);
 
             // make $count works
-            Request.ODataProperties().TotalCount = stavkaRepository.GetCount(sqlBuilder.ToCountSql());
+            Request.ODataProperties().TotalCount = await stavkaRepository.GetCount(sqlBuilder.ToCountSql());
 
-            return Ok(stavkaRepository.GetAll(sqlBuilder.ToSql()));
+            return Ok(await stavkaRepository.GetAll(sqlBuilder.ToSql()));
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns counted items
         /// </returns>
-        public IHttpActionResult GetCount(ODataQueryOptions<Racun> queryOptions)
+        public async Task<IHttpActionResult> GetCount(ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
             try
@@ -72,7 +73,7 @@ namespace ODataDapper.Controllers
             }
 
             var sqlBuilder = new SQLQueryBuilder(queryOptions);   
-            return Ok(stavkaRepository.GetCount(sqlBuilder.ToCountSql()));
+            return Ok(await stavkaRepository.GetCount(sqlBuilder.ToCountSql()));
         }
 
         // GET: odata/Stavke(5)

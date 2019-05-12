@@ -26,11 +26,12 @@ namespace ODataDapper.ConsoleApp
             settings.IgnoreResourceNotFoundException = true;
             settings.PreferredUpdateMethod = ODataUpdateMethod.Put;
             settings.OnTrace = (x, y) => Console.WriteLine(string.Format(x, y));
+            settings.OnTrace = (x, y) => Log.Logger.ForContext<Program>().Information(string.Format(x, y));
 
             var client = new ODataClient(settings);
 
             //Test client on Racuni collection
-            await FetchRacuni(client);
+          //  await FetchRacuni(client);
 
             //Test client on Stavke collection
             await FetchStavke(client);
@@ -102,7 +103,21 @@ namespace ODataDapper.ConsoleApp
                 .Filter(s => s.Cijena > 6)
                 .OrderByDescending(s => s.Cijena)
                 .FindEntriesAsync();
+
+            Console.WriteLine("Stavke po filteru unutar kolekcije ");
             foreach (var stavka in stavke)
+            {
+                Console.WriteLine($"Id: {stavka.Id}, cijena: {stavka.Cijena}, naziv: {stavka.Naziv}");
+            }
+            Console.WriteLine(" ");
+
+            //Get stavke in the middle of the collection
+            var middleStavke = await client.For<Stavka>("Stavke")
+                .Top(2)
+                .Skip(1)
+                .FindEntriesAsync();
+            Console.WriteLine("Stavke u sredini kolekcije ");
+            foreach (var stavka in middleStavke)
             {
                 Console.WriteLine($"Id: {stavka.Id}, cijena: {stavka.Cijena}, naziv: {stavka.Naziv}");
             }

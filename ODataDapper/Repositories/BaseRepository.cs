@@ -1,10 +1,12 @@
 ﻿using Dapper;
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace ODataDapper.Repositories
@@ -40,11 +42,11 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns results of query.
         /// </returns>
-        protected List<T> Query<T>(string sql, object parameters = null)
+        protected async Task<List<T>> Query<T>(string sql, object parameters = null)
         {
             using (var connection = CreateConnection())
             {
-                return connection.Query<T>(sql, parameters).ToList();
+                return (await connection.QueryAsync<T>(sql, parameters)).ToList();
             }
         }
 

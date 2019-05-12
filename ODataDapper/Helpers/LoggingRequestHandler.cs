@@ -31,7 +31,7 @@ namespace ODataDapper.Helpers
             if (request.Content != null)
             {
                 var requestBody = await request.Content.ReadAsStringAsync();
-                Log.Logger.ForContext<LoggingRequestHandler>().Warning(requestBody);
+                Log.Logger.ForContext<LoggingRequestHandler>().Information(requestBody);
             }
 
             // let other handlers process the request
@@ -41,7 +41,7 @@ namespace ODataDapper.Helpers
             if (result.Content != null)
             {
                 var responseBody = await result.Content.ReadAsStringAsync();
-                Log.Logger.ForContext<LoggingRequestHandler>().Warning(responseBody);
+                Log.Logger.ForContext<LoggingRequestHandler>().Information(responseBody);
             }
 
             return result;

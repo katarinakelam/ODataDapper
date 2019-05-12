@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace ODataDapper.Repositories
@@ -29,9 +30,9 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns all stavke in the database.
         /// </returns>
-        public IEnumerable<Stavka> GetAll(string filterSql)
+        public async Task<IEnumerable<Stavka>> GetAll(string filterSql)
         {
-            return Query<Stavka>("SELECT * FROM Stavka" + filterSql);
+            return (await Query<Stavka>("SELECT * FROM Stavka" + filterSql));
         }
 
         /// <summary>
@@ -41,10 +42,10 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns the count of items in collection
         /// </returns>
-        public int GetCount(KeyValuePair<string, string> sqlClause)
+        public async Task<int> GetCount(KeyValuePair<string, string> sqlClause)
         {
             var sql = sqlClause.Key + "Stavka" + sqlClause.Value;
-            return Query<int>(sql).Single();
+            return (await Query<int>(sql)).Single();
         }
 
 

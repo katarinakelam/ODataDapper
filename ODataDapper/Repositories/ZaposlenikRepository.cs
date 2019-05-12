@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace ODataDapper.Repositories
@@ -29,9 +30,9 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns all zaposlenici in the database.
         /// </returns>
-        public IEnumerable<Zaposlenik> GetAll(string filterSql)
+        public async Task<IEnumerable<Zaposlenik>> GetAll(string filterSql)
         {
-            return Query<Zaposlenik>("SELECT * FROM Zaposlenik" + filterSql);
+            return await Query<Zaposlenik>("SELECT * FROM Zaposlenik" + filterSql);
         }
 
         /// <summary>
@@ -41,10 +42,10 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns the count of items in collection
         /// </returns>
-        public int GetCount(KeyValuePair<string, string> sqlClause)
+        public async Task<int> GetCount(KeyValuePair<string, string> sqlClause)
         {
             var sql = sqlClause.Key + "Zaposlenik " + sqlClause.Value;
-            return Query<int>(sql).Single();
+            return (await Query<int>(sql)).Single();
         }
 
 

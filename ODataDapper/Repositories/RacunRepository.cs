@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace ODataDapper.Repositories
@@ -19,7 +20,7 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns matched racun.
         /// </returns>
-        public Racun GetById(int id)
+        public async Task<Racun> GetById(int id)
         {
             //Get basic racun info
             var racun = QueryFirstOrDefault<Racun>("SELECT * FROM Racun WHERE Racun.Id = @Id ", new { id });
@@ -30,7 +31,7 @@ namespace ODataDapper.Repositories
             racun.Stavke = new List<Stavka>();
 
             //Get all stavke from this racun
-            racun.Stavke = Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { id });
+            racun.Stavke = await Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { id });
 
             racun.Zaposlenik = new Zaposlenik();
             //Get the matching zaposlenik from this racun
@@ -46,10 +47,10 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns the count of items in collection
         /// </returns>
-        public int GetCount(KeyValuePair<string, string> sqlClause)
+        public async Task<int> GetCount(KeyValuePair<string, string> sqlClause)
         {
             var sql = sqlClause.Key + "Racun " + sqlClause.Value;
-            return Query<int>(sql).Single();
+            return (await Query<int>(sql)).Single();
         }
 
         /// <summary>
@@ -59,10 +60,10 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns all racuni in the database.
         /// </returns>
-        public IEnumerable<Racun> GetAll(string filterSql)
+        public async Task<IEnumerable<Racun>> GetAll(string filterSql)
         {
             //Get all racuni from the database
-            var racuni = Query<Racun>("SELECT * FROM Racun" + filterSql);
+            var racuni = await Query<Racun>("SELECT * FROM Racun" + filterSql);
 
             //Create an empty new list of Racuni
             var newRacuni = new List<Racun>();
@@ -81,7 +82,7 @@ namespace ODataDapper.Repositories
                 newRacun.Zaposlenik = new Zaposlenik();
 
                 //Get all stavke from this racun
-                newRacun.Stavke = Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { racun.Id });
+                newRacun.Stavke = await Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { racun.Id });
 
                 //Get the matching zaposlenik from this racun
                 newRacun.Zaposlenik = QueryFirstOrDefault<Zaposlenik>("SELECT Zaposlenik.Id, Zaposlenik.Ime, Zaposlenik.Prezime, Zaposlenik.Adresa, Zaposlenik.DatumRodjenja, Zaposlenik.Dopustenje from Zaposlenik, Racun where Zaposlenik.Id = Racun.Zaposlenik_Id and Racun.Id = @Id", new { racun.Id });
