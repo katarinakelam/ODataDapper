@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
+using System.Web.Http.OData.Extensions;
 using System.Web.Http.OData.Query;
 using System.Web.Http.OData.Routing;
 using ODataDapper.Models;
@@ -31,7 +32,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns all racuni from the database.
         /// </returns>
-        [EnableQuery]
+        [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
         public IHttpActionResult GetRacuni(ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
@@ -46,7 +47,33 @@ namespace ODataDapper.Controllers
 
             var sqlBuilder = new SQLQueryBuilder(queryOptions);
 
+            // make $count works     
+            Request.ODataProperties().TotalCount = racunRepository.GetCount(sqlBuilder.ToCountSql());
+
             return Ok(racunRepository.GetAll(sqlBuilder.ToSql()));
+        }
+
+        /// <summary>
+        /// Gets the count.
+        /// </summary>
+        /// <param name="queryOptions">The query options.</param>
+        /// <returns>
+        /// Returns counted items
+        /// </returns>
+        public IHttpActionResult GetCount(ODataQueryOptions<Racun> queryOptions)
+        {
+            // validate the query.
+            try
+            {
+                queryOptions.Validate(_validationSettings);
+            }
+            catch (ODataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            var sqlBuilder = new SQLQueryBuilder(queryOptions);    
+            return Ok(racunRepository.GetCount(sqlBuilder.ToCountSql()));
         }
 
         // GET: odata/Racuni(5)

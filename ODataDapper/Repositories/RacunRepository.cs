@@ -40,40 +40,55 @@ namespace ODataDapper.Repositories
         }
 
         /// <summary>
+        /// Gets the count.
+        /// </summary>
+        /// <param name="sqlClause">The composite sql clause.</param>
+        /// <returns>
+        /// Returns the count of items in collection
+        /// </returns>
+        public int GetCount(KeyValuePair<string, string> sqlClause)
+        {
+            var sql = sqlClause.Key + "Racun " + sqlClause.Value;
+            return Query<int>(sql).Single();
+        }
+
+        /// <summary>
         /// Gets all racuni.
         /// </summary>
-        /// <param name="filterSQL">The filter SQL.</param>
+        /// <param name="filterSql">The filter SQL.</param>
         /// <returns>
         /// Returns all racuni in the database.
         /// </returns>
-        public IEnumerable<Racun> GetAll(string filterSQL)
+        public IEnumerable<Racun> GetAll(string filterSql)
         {
             //Get all racuni from the database
-            var racuni = Query<Racun>("SELECT * FROM Racun" + filterSQL);
+            var racuni = Query<Racun>("SELECT * FROM Racun" + filterSql);
 
             //Create an empty new list of Racuni
             var newRacuni = new List<Racun>();
 
-            if (racuni != null)
-                foreach (var racun in racuni)
-                {
-                    //Create a new racun
-                    var newRacun = new Racun();
+            if (racuni == null)
+                return newRacuni;
 
-                    //Copy data from existing racun to a new one
-                    newRacun = racun;
-                    newRacun.Stavke = new List<Stavka>();
-                    newRacun.Zaposlenik = new Zaposlenik();
+            foreach (var racun in racuni)
+            {
+                //Create a new racun
+                var newRacun = new Racun();
 
-                    //Get all stavke from this racun
-                    newRacun.Stavke = Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { racun.Id });
+                //Copy data from existing racun to a new one
+                newRacun = racun;
+                newRacun.Stavke = new List<Stavka>();
+                newRacun.Zaposlenik = new Zaposlenik();
 
-                    //Get the matching zaposlenik from this racun
-                    newRacun.Zaposlenik = QueryFirstOrDefault<Zaposlenik>("SELECT Zaposlenik.Id, Zaposlenik.Ime, Zaposlenik.Prezime, Zaposlenik.Adresa, Zaposlenik.DatumRodjenja, Zaposlenik.Dopustenje from Zaposlenik, Racun where Zaposlenik.Id = Racun.Zaposlenik_Id and Racun.Id = @Id", new { racun.Id });
+                //Get all stavke from this racun
+                newRacun.Stavke = Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { racun.Id });
 
-                    //Add the expanded racun to list of racuni
-                    newRacuni.Add(newRacun);
-                }
+                //Get the matching zaposlenik from this racun
+                newRacun.Zaposlenik = QueryFirstOrDefault<Zaposlenik>("SELECT Zaposlenik.Id, Zaposlenik.Ime, Zaposlenik.Prezime, Zaposlenik.Adresa, Zaposlenik.DatumRodjenja, Zaposlenik.Dopustenje from Zaposlenik, Racun where Zaposlenik.Id = Racun.Zaposlenik_Id and Racun.Id = @Id", new { racun.Id });
+
+                //Add the expanded racun to list of racuni
+                newRacuni.Add(newRacun);
+            }
 
             return newRacuni;
         }

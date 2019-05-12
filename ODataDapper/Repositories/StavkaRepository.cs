@@ -25,14 +25,28 @@ namespace ODataDapper.Repositories
         /// <summary>
         /// Gets all stavke.
         /// </summary>
-        /// <param name="filterSQL">The filter SQL.</param>
+        /// <param name="filterSql">The filter SQL.</param>
         /// <returns>
         /// Returns all stavke in the database.
         /// </returns>
-        public IEnumerable<Stavka> GetAll(string filterSQL)
+        public IEnumerable<Stavka> GetAll(string filterSql)
         {
-            return Query<Stavka>("SELECT * FROM Stavka" + filterSQL);
+            return Query<Stavka>("SELECT * FROM Stavka" + filterSql);
         }
+
+        /// <summary>
+        /// Gets the count.
+        /// </summary>
+        /// <param name="sqlClause">The composite sql clause.</param>
+        /// <returns>
+        /// Returns the count of items in collection
+        /// </returns>
+        public int GetCount(KeyValuePair<string, string> sqlClause)
+        {
+            var sql = sqlClause.Key + "Stavka" + sqlClause.Value;
+            return Query<int>(sql).Single();
+        }
+
 
         /// <summary>
         /// Updates the stavka.

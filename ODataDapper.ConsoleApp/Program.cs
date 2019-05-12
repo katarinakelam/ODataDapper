@@ -38,7 +38,7 @@ namespace ODataDapper.ConsoleApp
 
         private static async Task FetchRacuni(ODataClient client)
         {
-            racunCount = client.For<Racun>("Racuni").FindEntriesAsync().Result.Count();
+            racunCount = await client.For<Racun>("Racuni").Count().FindScalarAsync<int>();
             Console.WriteLine("Broj svih računa: " + racunCount);
 
             Console.WriteLine("Zadnje uneseni racun: ");
@@ -94,7 +94,7 @@ namespace ODataDapper.ConsoleApp
         private static async Task FetchStavke(ODataClient client)
         {
             //Get count of collection
-            stavkeCount = client.For<Stavka>("Stavke").FindEntriesAsync().Result.Count();
+            stavkeCount = await client.For<Stavka>("Stavke").Count().FindScalarAsync<int>();
             Console.WriteLine("Broj svih stavki: " + stavkeCount);
 
             //Get all stavke with price larger than 6

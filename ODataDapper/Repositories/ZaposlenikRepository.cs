@@ -25,14 +25,28 @@ namespace ODataDapper.Repositories
         /// <summary>
         /// Gets all zaposlenici.
         /// </summary>
-        /// <param name="filterSQL">The filter SQL.</param>
+        /// <param name="filterSql">The filter SQL.</param>
         /// <returns>
         /// Returns all zaposlenici in the database.
         /// </returns>
-        public IEnumerable<Zaposlenik> GetAll(string filterSQL)
+        public IEnumerable<Zaposlenik> GetAll(string filterSql)
         {
-            return Query<Zaposlenik>("SELECT * FROM Zaposlenik" + filterSQL);
+            return Query<Zaposlenik>("SELECT * FROM Zaposlenik" + filterSql);
         }
+
+        /// <summary>
+        /// Gets the count.
+        /// </summary>
+        /// <param name="sqlClause">The composite sql clause.</param>
+        /// <returns>
+        /// Returns the count of items in collection
+        /// </returns>
+        public int GetCount(KeyValuePair<string, string> sqlClause)
+        {
+            var sql = sqlClause.Key + "Zaposlenik " + sqlClause.Value;
+            return Query<int>(sql).Single();
+        }
+
 
         /// <summary>
         /// Updates the zaposlenik.

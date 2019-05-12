@@ -293,6 +293,26 @@ namespace ODataDapper.Helpers
 
             return sql;
         }
+
+        /// <summary>
+        /// Translates to count sql query.
+        /// </summary>
+        /// <returns>
+        /// Returns query options translated to count sql query
+        /// </returns>
+        public KeyValuePair<string, string> ToCountSql()
+        {
+            string sql = $@"SELECT COUNT(*) FROM ";
+
+            string whereClause = BuildWhereClause(_queryOptions.Filter);
+            string compositeWhereClause = "";
+            if (!string.IsNullOrEmpty(whereClause))
+            {
+                compositeWhereClause = $" WHERE {whereClause}";
+            }
+
+            return new KeyValuePair<string, string>(sql, compositeWhereClause);
+        }
         #endregion
     }
 }
