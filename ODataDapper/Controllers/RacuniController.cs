@@ -33,7 +33,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns all racuni from the database.
         /// </returns>
-        [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
+        //[EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
         public async Task<IHttpActionResult> GetRacuni(ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
@@ -86,7 +86,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns the requested racun.
         /// </returns>
-       // [EnableQuery]
+        [EnableQuery]
         public IHttpActionResult GetRacun([FromODataUri] int key, ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
