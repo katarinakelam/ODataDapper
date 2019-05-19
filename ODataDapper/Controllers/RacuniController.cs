@@ -86,7 +86,6 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns the requested racun.
         /// </returns>
-        [EnableQuery]
         public IHttpActionResult GetRacun([FromODataUri] int key, ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
@@ -99,7 +98,6 @@ namespace ODataDapper.Controllers
                 return BadRequest(ex.Message);
             }
 
-            var sqlBuilder = new SQLQueryBuilder(queryOptions);
             return Ok(racunRepository.GetById(key));
         }
 
