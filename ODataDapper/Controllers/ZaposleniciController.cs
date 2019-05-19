@@ -31,7 +31,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns all zaposlenici from the database.
         /// </returns>
-        [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
+      //  [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
         public async Task<IHttpActionResult> GetZaposlenici(ODataQueryOptions<Zaposlenik> queryOptions)
         {
             // validate the query.

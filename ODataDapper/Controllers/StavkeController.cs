@@ -32,7 +32,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns all stavke from the database
         /// </returns>
-        [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
+      //  [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
         public async Task<IHttpActionResult> GetStavke(ODataQueryOptions<Stavka> queryOptions)
         {
             // validate the query.

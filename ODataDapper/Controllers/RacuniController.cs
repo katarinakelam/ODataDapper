@@ -86,7 +86,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns the requested racun.
         /// </returns>
-        [EnableQuery]
+       // [EnableQuery]
         public IHttpActionResult GetRacun([FromODataUri] int key, ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
