@@ -144,9 +144,9 @@ namespace ODataDapper.Controllers
                 return BadRequest(ModelState);
             }
 
-            //Insert the new zaposlenik into the database
-            var createdZaposlenik = zaposlenikRepository.Create(zaposlenik);
-            return Created(createdZaposlenik);
+            //Upiši novog zaposlenika u bazu
+            var stvoreniZaposlenik = zaposlenikRepository.Create(zaposlenik);
+            return Created(stvoreniZaposlenik);
         }
 
         // DELETE: odata/Zaposlenici(5)

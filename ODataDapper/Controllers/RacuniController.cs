@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
-using System.Web.Http.OData;
 using System.Web.Http.OData.Extensions;
 using System.Web.Http.OData.Query;
 using System.Web.Http.OData.Routing;
@@ -15,6 +14,7 @@ using ODataDapper.Models;
 using Microsoft.Data.OData;
 using ODataDapper.Repositories;
 using ODataDapper.Helpers;
+using System.Web.Http.OData;
 
 namespace ODataDapper.Controllers
 {
@@ -86,7 +86,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns the requested racun.
         /// </returns>
-        public IHttpActionResult GetRacun([FromODataUri] int key, ODataQueryOptions<Racun> queryOptions)
+        public async Task<IHttpActionResult> GetRacun([FromODataUri] int key, ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
             try
@@ -97,8 +97,8 @@ namespace ODataDapper.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
-            return Ok(racunRepository.GetById(key));
+            var racun = await racunRepository.GetById(key);
+            return Ok(racun);
         }
 
         // PUT: odata/Racuni(5)

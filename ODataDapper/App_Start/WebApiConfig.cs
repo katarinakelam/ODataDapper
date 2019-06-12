@@ -31,6 +31,7 @@ namespace ODataDapper
             routingConventions.Insert(0, new CountODataRoutingConvention());
 
             config.MessageHandlers.Add(new LoggingRequestHandler());
+            config.EnableQuerySupport();
             config.Routes.MapODataServiceRoute(
                 "ODataRoute",
                 null,
