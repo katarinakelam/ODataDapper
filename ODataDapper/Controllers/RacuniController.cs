@@ -25,7 +25,7 @@ namespace ODataDapper.Controllers
 
         // GET: odata/Racuni
         // GET: odata/Racuni?$filter=Zaposlenik_Id+eq+1
-        // GET: odata/Racuni?expand=Stavke
+        // GET: odata/Racuni?$expand=Stavke
         /// <summary>
         /// Gets the racuni.
         /// </summary>
@@ -33,7 +33,7 @@ namespace ODataDapper.Controllers
         /// <returns>
         /// Returns all racuni from the database.
         /// </returns>
-        //[EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
+        [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All)]
         public async Task<IHttpActionResult> GetRacuni(ODataQueryOptions<Racun> queryOptions)
         {
             // validate the query.
@@ -176,6 +176,9 @@ namespace ODataDapper.Controllers
         [HttpPost]
         public IHttpActionResult AddStavka([FromODataUri] int key, ODataActionParameters parameters)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             //read parameter from ODataActionParameters 
             var stavkaToAdd = parameters["Value"] as StavkaDTO;
 

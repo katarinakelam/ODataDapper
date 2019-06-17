@@ -31,7 +31,7 @@ namespace ODataDapper.Repositories
             racun.Stavke = new List<Stavka>();
 
             //Get all stavke from this racun
-            racun.Stavke = await Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { id });
+            racun.Stavke = await QueryAsync<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { id });
 
             racun.Zaposlenik = new Zaposlenik();
             //Get the matching zaposlenik from this racun
@@ -50,7 +50,7 @@ namespace ODataDapper.Repositories
         public async Task<int> GetCount(KeyValuePair<string, string> sqlClause)
         {
             var sql = sqlClause.Key + "Racun " + sqlClause.Value;
-            return (await Query<int>(sql)).Single();
+            return (await QueryAsync<int>(sql)).Single();
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace ODataDapper.Repositories
         public async Task<IEnumerable<Racun>> GetAll(string filterSql)
         {
             //Get all racuni from the database
-            var racuni = await Query<Racun>("SELECT * FROM Racun" + filterSql);
+            var racuni = await QueryAsync<Racun>("SELECT * FROM Racun" + filterSql);
 
             //Create an empty new list of Racuni
             var newRacuni = new List<Racun>();
@@ -82,7 +82,7 @@ namespace ODataDapper.Repositories
                 newRacun.Zaposlenik = new Zaposlenik();
 
                 //Get all stavke from this racun
-                newRacun.Stavke = await Query<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { racun.Id });
+                newRacun.Stavke = await QueryAsync<Stavka>("SELECT Stavka.Id, Stavka.Naziv, Stavka.Cijena, Stavka.Opis FROM Stavka JOIN Racun_Stavka ON Stavka.Id = Racun_Stavka.Stavka_Id join Racun on Racun_Stavka.Racun_Id = Racun.Id where Racun.Id = @Id", new { racun.Id });
 
                 //Get the matching zaposlenik from this racun
                 newRacun.Zaposlenik = QueryFirstOrDefault<Zaposlenik>("SELECT Zaposlenik.Id, Zaposlenik.Ime, Zaposlenik.Prezime, Zaposlenik.Adresa, Zaposlenik.DatumRodjenja, Zaposlenik.Dopustenje from Zaposlenik, Racun where Zaposlenik.Id = Racun.Zaposlenik_Id and Racun.Id = @Id", new { racun.Id });

@@ -32,7 +32,7 @@ namespace ODataDapper.Repositories
         /// </returns>
         public async Task<IEnumerable<Zaposlenik>> GetAll(string filterSql)
         {
-            return await Query<Zaposlenik>("SELECT * FROM Zaposlenik" + filterSql);
+            return await QueryAsync<Zaposlenik>("SELECT * FROM Zaposlenik" + filterSql);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace ODataDapper.Repositories
         public async Task<int> GetCount(KeyValuePair<string, string> sqlClause)
         {
             var sql = sqlClause.Key + "Zaposlenik " + sqlClause.Value;
-            return (await Query<int>(sql)).Single();
+            return (await QueryAsync<int>(sql)).Single();
         }
 
 

@@ -42,7 +42,7 @@ namespace ODataDapper.Repositories
         /// <returns>
         /// Returns results of query.
         /// </returns>
-        protected async Task<List<T>> Query<T>(string sql, object parameters = null)
+        protected async Task<List<T>> QueryAsync<T>(string sql, object parameters = null)
         {
             using (var connection = CreateConnection())
             {
